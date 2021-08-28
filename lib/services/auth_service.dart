@@ -13,7 +13,7 @@ class AuthService implements AuthServiceBase {
   @override
   Future<AuthUser?> signIn(String email, String password) async {
     final Database? db = await databaseService.getDatabase();
-
+    // print("get encrypt : ${getEncryptedPassword(password)}");
     final List<Map<String, dynamic>>? users = await db?.rawQuery(
         "SELECT * FROM users where email='$email' AND password = '${getEncryptedPassword(password)}'");
 
@@ -26,6 +26,7 @@ class AuthService implements AuthServiceBase {
   Future signUp(AuthUser authUser, String password) async {
     try {
       final db = await databaseService.getDatabase();
+
       final Map<String, dynamic> authUserMap = authUser.toJson();
       authUserMap['password'] = getEncryptedPassword(password);
 
@@ -36,7 +37,7 @@ class AuthService implements AuthServiceBase {
   }
 
   String getEncryptedPassword(String password) {
-    return Crypt.sha256(password).toString();
+    return Crypt.sha256(password, salt: 'password').toString();
   }
 
   bool isEmail(String value) {

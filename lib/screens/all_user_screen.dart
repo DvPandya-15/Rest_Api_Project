@@ -43,8 +43,6 @@ class _AllUserScreenState extends State<AllUserScreen> {
       hasMoreData = true;
       pageNumber++;
     });
-
-    print(users);
   }
 
   @override

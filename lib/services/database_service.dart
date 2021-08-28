@@ -18,12 +18,13 @@ class DatabaseService {
 Future<Database> createDb() async {
   String dbPath = await getDatabasesPath();
 
+  print(dbPath);
   return await openDatabase(
     join(dbPath, 'user.db'),
     version: 1,
     onCreate: (Database database, int version) async {
       final String query =
-          'CREATE TABLE users(id INTEGER PRIMARY KEY, email TEXT, password TEXT, first_name TEXT, last_name TEXT, username TEXT,)';
+          'CREATE TABLE users(id INTEGER PRIMARY KEY, email TEXT, password TEXT, first_name TEXT, last_name TEXT, username TEXT)';
       await database.execute(query);
     },
   );

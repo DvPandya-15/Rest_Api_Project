@@ -20,8 +20,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passwordTextEditingController = TextEditingController();
 
   final _signUpFormKey = GlobalKey<FormState>();
-  // final _authService = locator<AuthenticationService>();
-  // final _userProfileService = locator<UserProfileService>();
 
   bool isPasswordVisible = false;
   bool isLoading = false;
@@ -99,12 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: CircularProgressIndicator(),
                       )
                     : CustomRoundedRectangularButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllUserScreen()));
-                        },
+                        onPressed: _performSignUp,
                         color: Colors.redAccent,
                         child: Text(
                           "Sign Up",
@@ -117,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(height: 50),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => SignInScreen()));
@@ -164,6 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       userName: userName,
       email: email,
     );
+
     try {
       await auth.signUp(authUser, password);
       setState(() => isLoading = false);

@@ -38,6 +38,26 @@ class _ShowModalBottomSheetState extends State<ShowModalBottomSheet> {
     }
   }
 
+  void editUser() async {
+    if (!formKey.currentState!.validate()) return;
+
+    User user = User(
+      email: emailController.text,
+      first_name: firstNameController.text,
+      last_name: lastNameController.text,
+    );
+    await userService.updateUser(user);
+
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "User edited successfully!",
+        ),
+      ),
+    );
+  }
+
   void addUser() async {
     if (!formKey.currentState!.validate()) return;
 
@@ -46,15 +66,14 @@ class _ShowModalBottomSheetState extends State<ShowModalBottomSheet> {
       first_name: firstNameController.text,
       last_name: lastNameController.text,
     );
-    isNewUser
-        ? await userService.addUser(user)
-        : await userService.updateUser(user);
+
+    await userService.addUser(user);
 
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          isNewUser ? "User Added successfully!" : "User edited successfully!",
+          "User Added successfully!",
         ),
       ),
     );
@@ -105,7 +124,7 @@ class _ShowModalBottomSheetState extends State<ShowModalBottomSheet> {
             ),
             SizedBox(height: 30),
             TextButton(
-              onPressed: addUser,
+              onPressed: isNewUser ? addUser : editUser,
               child: Text(
                 isNewUser ? "Add User" : "Edit User",
                 style: TextStyle(color: Colors.white),

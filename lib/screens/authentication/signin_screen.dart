@@ -1,3 +1,4 @@
+import 'package:e_it/model/auth_user.dart';
 import 'package:e_it/screens/all_user_screen.dart';
 import 'package:e_it/screens/authentication/signup_screen.dart';
 import 'package:e_it/services/auth_service.dart';
@@ -86,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 SizedBox(height: 50),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => SignUpScreen()));
@@ -123,8 +124,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
     try {
       setState(() => isLoading = true);
-      await auth.signIn(email, password);
+      AuthUser? user = await auth.signIn(email, password);
+
       setState(() => isLoading = false);
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Login Failed : User not found")));
+        return;
+      }
 
       Navigator.pushReplacement(
           context,
@@ -133,6 +140,8 @@ class _SignInScreenState extends State<SignInScreen> {
     } catch (e) {
       setState(() => isLoading = false);
       print("SignIn Error :$e");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Login Failed")));
     }
   }
 }
